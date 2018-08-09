@@ -1,0 +1,303 @@
+.content {
+	line-height: 22px;
+	padding: 25px;
+
+	height: 100%;
+}
+.more {
+	margin-top: 16px;
+	position: relative;
+
+	text-align: center;
+}
+.more#more {
+	position: fixed;
+	padding: 25px;
+	background-color: #242424;
+	border: 2px solid #262626;
+	border-radius: 4px;
+
+	right: 0;
+	left: 0;
+	margin-right: auto;
+	margin-left: auto;
+	min-height: 10em;
+	width: 50%;
+}
+/* .more#stats {
+width: 50%;
+margin-left: 25%;
+} */
+.menu {
+	position: relative;
+	background: #2d2d2d;
+	border: 2px solid #00000016;
+	border-radius: 4px;
+	padding: 6px 6px 4px 6px;
+
+	font-size: 12px;
+
+	min-width: 200px;
+	max-width: 25%;
+	max-height: 25%;
+}
+button {
+	background-color: #222222;
+	border: 2px solid #ffffff16;
+	border-radius: 4px;
+	padding: 4px 8px 2px 8px;
+
+	font-size: 14px;
+	font-weight: 500;
+
+	/* color: #fdfdfd; */
+	cursor: pointer;
+}
+button + button {
+	margin-left: 5px;
+}
+button:hover,statbox:hover,#problem:hover { filter: brightness(1.15); }
+button.disabled {
+	border-color: #323232;
+	background: #222222aa;
+	color: #808080;
+	box-shadow: none;
+}
+button.green {
+	border-color: #22aa46aa;
+	/*background: #26460daa;*/
+	/*background: #228646aa*/
+
+	color: #12aa36;
+}
+button.blue {
+	border-color: #2646aaaa;
+	/* background: #0d2646aa; */
+
+	color: #2646aa;
+}
+button.red {
+	border-color: #aa2828aa;
+	/* background: #0d2646aa; */
+
+	color: #aa2828;
+}
+
+input,solution {
+	background-color: #222222;
+	border: 2px solid #ffffff16;
+	border-radius: 4px;
+	padding: 4px 4px 2px 4px;
+
+	font-size: 14px;
+
+	/*color: #fdfdfd; */
+}
+input:active,input:hover,input:focus {
+	border-color: #2646aa;
+}
+solution {
+	padding: 4px 8px 2px 8px;
+	margin-left: 5px;
+	font-weight: 500;
+}
+solution.incorrect {
+	/* border-color: #aa2222aa;
+	background-color: #aa0000aa; */
+
+	border-color: #aa2828aa;
+	color: #aa2828;
+}
+solution.correct {
+	/* border-color: #22aa22aa;
+	background-color: #00aa00aa; */
+
+	border-color: #22aa46aa;
+	color: #12aa36;
+}
+
+statbox {
+	background-color: #222222;
+	border: 2px solid #ffffff16;
+	border-radius: 4px;
+	padding: 4px 4px 2px 4px;
+
+	font-size: 10px;
+
+	/* color: #fdfdfd; */
+}
+
+.addition,.subtraction,.multiplication,.division,.modulo {
+	display: inline-block;
+}
+.addition {
+	font-size: 18px;
+	font-weight: 500;
+	transform: translateY(-1px);
+}
+.subtraction {
+	font-size: 16px;
+	font-weight: 500;
+	transform: translateY(-2px);
+}
+.multiplication {
+	font-size: 20px;
+	transform: translateY(-1px);
+}
+.division {
+	font-size: 16px;
+	font-weight: 500;
+	transform: translateY(-1px);
+}
+.modulo {
+	font-size: 18px;
+	font-weight: 500;
+	transform: translateY(-1px);
+}
+
+.fraction, .top, .bottom {
+	padding: 0 5px;
+}
+.fraction {
+	display: inline-block;
+	text-align: center;
+}
+.bottom {
+	border-top: 2px solid #ccc;
+	display: block;
+}
+
+.advance {
+	display: inline-block;
+	padding: 4px 6px 4px 6px;
+	font-size: 24px;
+
+	border-color: rgb(31, 181, 54);
+	background: rgb(31, 181, 54, 0.67);
+	/* color: #0a3307; */
+
+	position: absolute;
+	right: 0;
+	bottom: 0;
+
+	box-shadow: 1px 1px 2px rgb(31, 181, 54, 0.47);
+}
+.stat {
+	font-size: 12px;
+	color: #aaa;
+}
+
+/* Animations */
+@keyframes fadeInOut {
+	0% { opacity: 0; display: none; }
+	10% { opacity: 1; display: block; }
+	50% { opacity: 1; display: block; }
+	90% { opacity: 0; display: none; }
+	100% { opacity: 0; display: none; }
+}
+@-webkit-keyframes snackbar_fadeIn {
+	from {bottom: 0; opacity: 0;}
+	to {bottom: 16px; opacity: 1;}
+}
+@keyframes snackbar_fadeIn {
+	from {bottom: 0; opacity: 0;}
+	to {bottom: 16px; opacity: 1;}
+}
+@-webkit-keyframes snackbar_fadeOut {
+	from {bottom: 16px; opacity: 1;}
+	to {bottom: 0; opacity: 0;}
+}
+@keyframes snackbar_fadeOut {
+	from {bottom: 16px; opacity: 1;}
+	to {bottom: 0; opacity: 0;}
+}
+
+/* Formatting */
+ns { user-select: none; }
+
+b { font-weight: 500;}
+d { text-decoration: dotted underline; }
+d:hover { filter: brightness(1.25); }
+a { text-decoration: none; }
+a:hover { text-decoration: none; filter: brightness(1.25); }
+a:active { text-decoration: none; filter: brightness(1.35); }
+a:visited { text-decoration: none; filter: brightness(-1.00); }
+
+hr,vr { border: 1px solid #262626; margin-left: 0.5em; margin-right: 0.5em; }
+vr { transform: rotate(90deg); }
+
+h1,h2,h3,h4,h5,h6 {	font-weight: 500; }
+title,.title { font-size: 32px; text-align: center; }
+big,.big { font-size: larger; }
+small,.small {	font-size: smaller; }
+
+sc,.sc { font-variant: small-caps; }
+li { margin: 5px; }
+
+* { font-family: 'Rubik', sans-serif; letter-spacing: .045em; text-shadow: 0.5px 0.5px 2px #00000080; color: #f5f5f5; user-select: none; }
+*:focus { outline: none; }
+div { transition: width,height 500ms ease-out; }
+html { width: 100%; height: 100%; z-index: -1; }
+body {
+	/* width: 100%;
+	height: 100%;
+	margin: 0; */
+	z-index: -1;
+	filter: blur(0.1px);
+}
+.bg {
+	background: #202020;
+	transition: background 500ms ease-out;
+}
+.bs {
+	box-shadow: 1px 1px 4px #ffffff26;
+}
+
+/* General */
+.show { display: block; opacity: 1; }
+.hide { display: none; opacity: 0; }
+
+::selection { color: black; background: #38383850; }
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #252525; } /*10*/
+::-webkit-scrollbar-thumb { background: #181818; } /*26*/
+::-webkit-scrollbar-thumb:hover { background: #383838; } /*56*/
+
+input[type=range] {
+  -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
+  width: 100%; /* Specific width is required for Firefox. */
+  background: transparent; /* Otherwise white in Chrome */
+}
+input[type=range]::-ms-track {
+  width: 100%;
+  cursor: pointer;
+
+  /* Hides the slider so custom styles can be added */
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  border: 2px solid #464646;
+  height: 15px;
+  width: 25px;
+  border-radius: 3px;
+  background: #363636;
+  cursor: pointer;
+  margin-top: -3px;
+}
+input[type=range]::-webkit-slider-thumb:hover {
+	border-color: #565656;
+}
+
+input[type="number"] {
+	-webkit-appearance: textfield;
+	-moz-appearance: textfield;
+	appearance: textfield;
+}
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+	-webkit-appearance: none;
+}
