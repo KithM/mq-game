@@ -11,32 +11,55 @@ function generateMathProblem(difficulty){
 		nums = getRandomInt(2,3);
 		symbols = [`+`,`-`];
 		min_num = 0;
-		max_num = 4;
+		max_num = 8;
 
 	} else if(difficulty == 2){
 		nums = getRandomInt(2,5);
 		symbols = [`+`,`-`];
-		min_num = -2;
-		max_num = 6;
+		min_num = -6;
+		max_num = 12;
 
 	} else if(difficulty == 3){
-		nums = getRandomInt(3,6);
+		nums = getRandomInt(2,5);
+		symbols = [`+`,`-`,`*`];
+		min_num = -10;
+		max_num = 20;
+
+	} else if(difficulty == 4){
+		nums = getRandomInt(3,5);
 		symbols = [`+`,`-`,`*`];
 		min_num = -12;
 		max_num = 24;
 
-	} else if(difficulty == 4){
-		nums = getRandomInt(4,8);
-		symbols = [`+`,`-`,`*`,`/`]; // × ÷
+	} else if(difficulty == 5){
+		nums = getRandomInt(4,5);
+		symbols = [`+`,`-`,`*`]; // × ÷
 		min_num = -24;
 		max_num = 42;
-		dec = 1;
 
-	} else if(difficulty > 4){
+	} else if(difficulty == 6){
+		nums = getRandomInt(4,6);
+		symbols = [`+`,`-`,`*`,`/`];
+		min_num = -42;
+		max_num = 42;
+
+	} else if(difficulty == 7){
+		nums = getRandomInt(4,7);
+		symbols = [`+`,`-`,`*`,`/`];
+		min_num = -42;
+		max_num = 86;
+
+	} else if(difficulty == 8){
+		nums = getRandomInt(5,7);
+		symbols = [`+`,`-`,`*`,`/`,`%`];
+		min_num = -86;
+		max_num = 86;
+
+	} else if(difficulty == 9){
 		nums = getRandomInt(5,8);
 		symbols = [`+`,`-`,`*`,`/`,`%`];
-		min_num = -(difficulty*10);
-		max_num = (difficulty*10);
+		min_num = -100;
+		max_num = 100;
 		dec = 1;
 
 	} else {
@@ -67,17 +90,17 @@ function generateMathProblem(difficulty){
 	p.difficulty = difficulty;
 	p.complexity = getMathProblemComplexity(p);
 	p.tries = 1;
+	p.time = 0; //seconds
 
-	if(p.difficulty == 1 && p.complexity > 5){
-		return tryGenerateMathProblem(difficulty);
-	} else if(p.difficulty == 2 && p.complexity > 9){
-		return tryGenerateMathProblem(difficulty);
-	} else if(p.difficulty == 3 && p.complexity > 14){
-		return tryGenerateMathProblem(difficulty);
-	} else if(p.difficulty == 4 && p.complexity > 19){
-		return tryGenerateMathProblem(difficulty);
-	}
-	if(p.complexity > 24){
+	if(
+		(p.difficulty == 1 && p.complexity > 6) ||
+		(p.difficulty == 2 && p.complexity > 9) ||
+		(p.difficulty == 3 && p.complexity > 14) ||
+		(p.difficulty == 4 && p.complexity > 19) ||
+		(p.difficulty == 5 && p.complexity > 24) ||
+		(p.difficulty == 6 && p.complexity > 29) ||
+		(p.difficulty >= 7 && p.complexity > 34)
+	){
 		return tryGenerateMathProblem(difficulty);
 	}
 
@@ -97,12 +120,47 @@ function tryGenerateMathProblem(difficulty){
 		throw err;
 	}
 }
+function getStatBoxColor(value){
+	let color = `#363636`;
+
+	if(value < 1){
+		color = `#363636`;
+	} else if(value < 5){
+		color = `#363640`;
+	} else if(value < 10){
+		color = `#363656`;
+	} else if(value < 20){
+		color = `#404060`;
+	} else if(value < 30){
+		color = `#404076`;
+	} else if(value < 40){
+		color = `#404080`;
+	} else if(value < 50){
+		color = `#404096`;
+	} else if(value < 60){
+		color = `#5656a0`;
+	} else if(value < 70){
+		color = `#5656b6`;
+	} else if(value < 80){
+		color = `#5656c0`;
+	} else if(value < 90){
+		color = `#5656d6`;
+	} else if(value > 90){
+		color = `#6060f0`;
+	}
+
+	return color;
+}
 function simplifyMathProblem(problem){
 	let p = problem;
 	p.problem = p.problem
 	//.replace(/(\s{0,}[-+*/%]{0,}\s{0,}0\s{0,}[-+*/%]{0,}\s{0,})/gm,``)
-	.replace(/(- \(-(.{0,})\))/gm,`+ $2`)
-	.replace(/(\+ \(-(.{0,})\))/gm,`- $2`);
+	// .replace(/(- \(-(.{0,})\))/gm,`+ $2`)
+	// .replace(/(\+ \(-(.{0,})\))/gm,`- $2`);
+	.replace(/(-{0,}[^\s\-\+\*\/\%]+) - \(-([^\s\-\+\*\/\%]+)\)/gm, `$1 + $2`)
+	.replace(/(-{0,}[^\s\-\+\*\/\%]+) ([\-\+\*\/\%]) 0/gm,`$1`)
+	.replace(/0 ([\-\+\*\/\%]) (-{0,}[^\s\-\+\*\/\%]+)/gm,`$2`)
+	;
 
 	p.answer = solveMathProblem(p);
 	p.difficulty = problem.difficulty;
@@ -115,10 +173,20 @@ function getMathProblemComplexity(problem){
 	c += problem.difficulty/5;
 	c += problem.problem.length/10;
 
-	for (var n in problem.problem) {
-		let num = Math.abs(Number(n));
-		c += (num / 100) * 1.25;
+	nums = problem.problem.match(/(-{0,}\d{1,}\.{0,}\d{0,})/gm);
+	for (var i = 0; i < nums.length; i++) {
+		let n = Math.abs(Number(nums[i]));
+		c += n/10;
 	}
+	symbs = problem.problem.match(/([\-\+\*\/\%])/gm);
+	for (var i = 0; i < symbs.length; i++) {
+		if(symbs[i] == `+`){ c += 0.05; }
+		else if(symbs[i] == `-`){ c += 0.075; }
+		else if(symbs[i] == `*`){ c += 0.1; }
+		else if(symbs[i] == `/`){ c += 0.2; }
+		else if(symbs[i] == `%`){ c += 0.3; }
+	}
+	c += 0.5 * symbs.length;
 
 	return numberToDecimalNumber(c,1);
 }

@@ -11,7 +11,7 @@
 	text-align: center;
 }
 .more#more {
-	position: fixed;
+	/*position: fixed;*/
 	padding: 25px;
 	background-color: #242424;
 	border: 2px solid #262626;
@@ -22,12 +22,11 @@
 	margin-right: auto;
 	margin-left: auto;
 	min-height: 10em;
-	width: 50%;
+	height: 50%;
+	width: 75%;
+
+	margin-bottom: auto;
 }
-/* .more#stats {
-width: 50%;
-margin-left: 25%;
-} */
 .menu {
 	position: relative;
 	background: #2d2d2d;
@@ -56,7 +55,7 @@ button {
 button + button {
 	margin-left: 5px;
 }
-button:hover,statbox:hover,#problem:hover { filter: brightness(1.15); }
+button:hover,statbox:hover,#problem:hover { border-color: #2646aa; filter: brightness(1.15); }
 button.disabled {
 	border-color: #323232;
 	background: #222222aa;
@@ -81,6 +80,14 @@ button.red {
 	/* background: #0d2646aa; */
 
 	color: #aa2828;
+}
+.morebutton {
+	display: inline-block;
+	width: 15px;
+	transform: rotate(90deg) translate(-3px,-5px);
+	font-size: 28px;
+	line-height: 10px;
+	color: #383838;
 }
 
 input,solution {
