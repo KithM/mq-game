@@ -2,19 +2,33 @@ function createProblemMenu(){
 	let more = document.getElementById(`more`);
 	more.innerHTML = ``;
 
-	// Title
-	let title = document.createElement(`button`);
-	title.innerHTML = `No Variable<vr></vr>`;
-	title.style.display = `table`;
-	title.style.padding = `8px 8px 6px 8px`;
-	title.style.margin = `-15px`;
-	title.style.fontWeight = `normal`;
-	title.style.fontSize = `18px`;
-	let b = document.createElement(`b`);
-	b.innerHTML = `...`;
-	b.className = `morebutton`;
-	title.appendChild(b);
-	more.appendChild(title);
+	// Menu Selector
+	let mstitle = document.createElement(`button`);
+	mstitle.innerHTML = `No Variable<vr></vr>`;
+	mstitle.id = `ms`;
+	mstitle.style.position = `absolute`;
+	mstitle.style.zIndex = `2`;
+	mstitle.style.margin = `-15px`;
+	mstitle.style.fontSize = `20px`;
+	mstitle.style.left = `25px`;
+	mstitle.onclick = toggleDropDown;
+	mstitle.className = `dropdown dropbtn blue`;
+	let mstitleb = document.createElement(`b`);
+	mstitleb.innerHTML = `...`;
+	mstitleb.className = `morebutton`;
+	mstitleb.style.fontSize = `24px`;
+	mstitle.appendChild(mstitleb);
+	more.appendChild(mstitle);
+
+	// Menu Selector Options
+	let msoptions = document.createElement(`div`);
+	msoptions.className = `dropdown-content`;
+	msoptions.id = `myDropdown`;
+	mstitle.appendChild(msoptions);
+
+	let msoptions_a = document.createElement(`a`);
+	msoptions_a.innerHTML = `Menu Option A`;
+	msoptions.appendChild(msoptions_a);
 
 	// The Problem
 	let pspan = document.createElement(`span`);
@@ -120,11 +134,14 @@ function createProblemMenu(){
 	// JQuery
 	// Check the input as a solution to the current problem
 	var timeout = null;
-	$('#answer').keyup(function(event) {
+	$('#answer').keypress(function(k, event) {
 		let sol = document.getElementById(`solution`);
 		let ans = document.getElementById(`answer`);
+		if(k.key != `Enter`){
+			return;
+		}
+		if(ans.value == `` || isNaN(ans.value) || ans.readOnly == `true`){ return; }
 		if(isNearSolution(ans.value)){ //solveMathProblem(Problem)
-			if(ans.value == `` || isNaN(ans.value) || ans.readOnly == `true`){ return; }
 			$(this).off(event);
 
 			ans.readOnly = `true`;
@@ -134,71 +151,66 @@ function createProblemMenu(){
 			if(Problem.difficulty > Highscores.difficulty){	Highscores.difficulty = Problem.difficulty; }
 			if(Problem.complexity > Highscores.complexity){	Highscores.complexity = Problem.complexity;	}
 			clearInterval(__ProblemTimeInterval);
-			Highscores.problems.push(Problem);
 
 			let totalatt = 0;
 			let totaltime = 0;
-			for (var i = 0; i < Highscores.problems.length; i++) {
-				totalatt += Highscores.problems[i].tries;
-				totaltime += Highscores.problems[i].time;
+			for (var i = 0; i < Problems.list.length; i++) {
+				totalatt += Problems.list[i].tries;
+				totaltime += Problems.list[i].time;
 			}
-			Highscores.averageAttempts = numberToDecimalNumber(totalatt / Highscores.problems.length,1);
-			Highscores.averageTime = numberToDecimalNumber(totaltime / Highscores.problems.length,1);
+			Highscores.averageAttempts = numberToDecimalNumber(totalatt / Problems.list.length,1);
+			Highscores.averageTime = numberToDecimalNumber(totaltime / Problems.list.length,1);
 
-			let pts = Math.round((Problem.complexity/2.5)+0.5/Problem.difficulty);//Math.floor((Problem.complexity/2.5)+0.5/Problem.difficulty) / (Problem.tries/5);
+			let pts = Problem.points;
+
+			// TODO TODO TODO
 			let add = Problem.problem.match(/(\+)/gmi);
-			if(add)
-			Levels.addition += Math.round(pts*add.length);
+			if(add){
+				Points.addition += pts;
+				Points.addition = numberToDecimalNumber(Points.addition,1);
+			}
 
-			let sub = Problem.problem.match(/(\-)/gmi)
-			if(sub)
-			Levels.subtraction += Math.round(pts*sub.length);
+			let sub = Problem.problem.match(/(\-)/gmi);
+			if(sub){
+				Points.subtraction += pts;
+				Points.subtraction = numberToDecimalNumber(Points.subtraction,1);
+			}
 
 			let mul = Problem.problem.match(/(\*)/gmi);
-			if(mul)
-			Levels.multiplication += Math.round(pts*mul.length);
+			if(mul){
+				Points.multiplication += pts;
+				Points.multiplication = numberToDecimalNumber(Points.multiplication,1);
+			}
 
 			let div = Problem.problem.match(/(\/)/gmi);
-			if(div)
-			Levels.division += Math.round(pts*div.length);
+			if(div){
+				Points.division += pts;
+				Points.division = numberToDecimalNumber(Points.division,1);
+			}
 
 			let mod = Problem.problem.match(/(\%)/gmi);
-			if(mod)
-			Levels.modulo += Math.round(pts*mod.length); //Math.max(Problem.complexity-mod.length,0)
+			if(mod){
+				Points.modulo += pts;
+				Points.modulo = numberToDecimalNumber(Points.modulo,1);
+			}
 
+			generateGradeLevels();
 			createStatsMenu();
 		} else {
 			sol.className = `incorrect`;
 			if(ans.value != null && ans.value != ``){
-				sol.innerHTML = `❌`;
+				sol.innerHTML = `❌<vr></vr>${(Options.maxTries - Problem.tries)+0} tries left`;
 			} else {
 				sol.className = `hide`;
 			}
 
-			timeout = setTimeout(function(){
-				let sol = document.getElementById(`solution`);
-				let ans = document.getElementById(`answer`);
-				Problem.tries = Problem.tries+1;
-				let defval = ans.placeholder;
-				if(Problem.tries > 24 && Problem != simplifyMathProblem(Problem)){
-					Problem = simplifyMathProblem(Problem);
-					createProblemMenu();
-				}
-			}, 250);
-		}
-	});
-	// Create a new problem when Enter is pressed
-	$(document).keypress(function(k) {
-		let sol = document.getElementById(`solution`);
-		if(k.key == `Enter` && sol.className == `correct`)
-		createNewProblem(Problem.difficulty);
-	});
-	// Replace division symbol and format as a fraction
-	$('.fraction').each(function(key, value) {
-		$this = $(this);
-		var split = $this.html().split("/");
-		if( split.length == 2 ){
-			$this.html('<span class="top">'+split[0]+'</span><span class="bottom">'+split[1]+'</span>');
+			Problem.tries = Problem.tries+1;
+			if(Problem.tries > Options.maxTries){
+				$(this).off(event);
+				ans.readOnly = `true`;
+				generateGradeLevels();
+				createStatsMenu();
+			}
 		}
 	});
 }
@@ -210,7 +222,8 @@ function createStatsMenu(){
 
 	let stats_title = document.createElement(`div`);
 	stats_title.innerHTML = `<big>Stats:</big>`;
-	stats_title.style.margin = `10px`;
+	stats_title.style.margin = `10px 0px 10px 0px`;
+	stats_title.style.textAlign = `center`;
 	stats.appendChild(stats_title);
 
 	let tries = document.createElement(`span`);
@@ -256,45 +269,61 @@ function createStatsMenu(){
 	stats.appendChild(document.createElement(`hr`));
 
 	// LEVELS
+	let levels_div = document.createElement(`div`);
+	levels_div.style.width = `50%`;
+	levels_div.style.left = `50%`;
+	levels_div.style.display = `inline-block`;
+	levels_div.style.textAlign = `left`;
+	stats.appendChild(levels_div);
+
 	let levels_title = document.createElement(`div`);
-	levels_title.style.margin = `10px`;
-	levels_title.innerHTML = `<big>Levels:</big>`;
-	stats.appendChild(levels_title);
+	levels_title.style.margin = `10px 0px 10px 0px`;
+	levels_title.style.textAlign = `center`;
+	levels_title.innerHTML = `<big>Scoring:</big>`;
+	//stats.appendChild(levels_title);
+	levels_div.appendChild(levels_title);
 
 	let add = document.createElement(`span`);
 	add.className = `stat`;
-	add.innerHTML = `Addition: <statbox style=border-color:${getStatBoxColor(Levels.addition)}>${Levels.addition}</statbox>`;
-	stats.appendChild(add);
+	add.innerHTML = `Addition: ${Grades.addition}% <statbox class=${getLevelGrade(Grades.addition)}>${getLevelGrade(Grades.addition)}</statbox>`;
+	levels_div.appendChild(add);
 
-	stats.appendChild(document.createElement(`vr`));
+	//levels_div.appendChild(document.createElement(`br`));
 
 	let sub = document.createElement(`span`);
 	sub.className = `stat`;
-	sub.innerHTML = `Subtraction: <statbox style=border-color:${getStatBoxColor(Levels.subtraction)}>${Levels.subtraction}</statbox>`;
-	stats.appendChild(sub);
+	sub.innerHTML = `Subtraction: ${Grades.subtraction}% <statbox class=${getLevelGrade(Grades.subtraction)}>${getLevelGrade(Grades.subtraction)}</statbox>`;
+	levels_div.appendChild(sub);
 
-	stats.appendChild(document.createElement(`br`));
+	//levels_div.appendChild(document.createElement(`br`));
 
 	let mul = document.createElement(`span`);
 	mul.className = `stat`;
-	mul.innerHTML = `Multiplication: <statbox style=border-color:${getStatBoxColor(Levels.multiplication)}>${Levels.multiplication}</statbox>`;
-	stats.appendChild(mul);
+	mul.innerHTML = `Multiplication: ${Grades.multiplication}% <statbox class=${getLevelGrade(Grades.multiplication)}>${getLevelGrade(Grades.multiplication)}</statbox>`;
+	levels_div.appendChild(mul);
 
-	stats.appendChild(document.createElement(`vr`));
+	//levels_div.appendChild(document.createElement(`br`));
 
 	let div = document.createElement(`span`);
 	div.className = `stat`;
-	div.innerHTML = `Division: <statbox style=border-color:${getStatBoxColor(Levels.division)}>${Levels.division}</statbox>`;
-	stats.appendChild(div);
+	div.innerHTML = `Division: ${Grades.division}% <statbox class=${getLevelGrade(Grades.division)}>${getLevelGrade(Grades.division)}</statbox>`;
+	levels_div.appendChild(div);
 
-	stats.appendChild(document.createElement(`br`));
+	//levels_div.appendChild(document.createElement(`br`));
 
 	let mod = document.createElement(`span`);
 	mod.className = `stat`;
-	mod.innerHTML = `Modulo: <statbox style=border-color:${getStatBoxColor(Levels.modulo)}>${Levels.modulo}</statbox>`;
-	stats.appendChild(mod);
+	mod.innerHTML = `Modulo: ${Grades.modulo}% <statbox class=${getLevelGrade(Grades.modulo)}>${getLevelGrade(Grades.modulo)}</statbox>`;
+	levels_div.appendChild(mod);
 
 	stats.appendChild(document.createElement(`hr`));
+
+	// Pregenerate hover text
+	$(`statbox`).hover(function(k) {
+		let me = $(this)[0];
+		if(me != null){
+		}
+	});
 }
 function toggleOptionsMenu(){
 	let opm = document.getElementById(`options`);
@@ -327,16 +356,16 @@ function createOptionsMenu(){
 	opm.appendChild(document.createElement(`br`));
 
 	let diffinfo = document.createElement(`p`);
-	diffinfo.className = `stat`;
-	diffinfo.style = `padding: 4px; border: 2px solid #363636; border-radius: 4px; font-size: 10px; width: 60%; left: 50%; display: inline-block;`;
+	diffinfo.className = `stat statdiv`;
+	//diffinfo.style = `padding: 4px; border: 2px solid #363636; border-radius: 4px; font-size: 10px; width: 60%; left: 50%; display: inline-block;`;
 	if(inputdiff.value == 1){
 		diffinfo.innerHTML = `Addition and subtraction problems using the values 0 to 8. Generates 2 to 3 numbers.`;
 	} else if(inputdiff.value == 2){
-		diffinfo.innerHTML = `Addition and subtraction problems using the values -6 to 12. Generates 2 to 5 numbers.`;
+		diffinfo.innerHTML = `Addition and subtraction problems using the values -6 to 12. Generates 3 numbers.`;
 	} else if(inputdiff.value == 3){
-		diffinfo.innerHTML = `Addition, subtraction, and multiplication problems using the values -10 to 20. Generates 2 to 5 numbers.`;
+		diffinfo.innerHTML = `Addition, subtraction, and multiplication problems using the values -10 to 20. Generates 3 to 4 numbers.`;
 	} else if(inputdiff.value == 4){
-		diffinfo.innerHTML = `Addition, subtraction, and multiplication problems using the values -12 to 24. Generates 3 to 5 numbers.`;
+		diffinfo.innerHTML = `Addition, subtraction, and multiplication problems using the values -12 to 24. Generates 4 numbers.`;
 	} else if(inputdiff.value == 5){
 		diffinfo.innerHTML = `Addition, subtraction, and multiplication problems using the values -24 to 42. Generates 4 to 5 numbers.`;
 	} else if(inputdiff.value == 6){
@@ -348,6 +377,46 @@ function createOptionsMenu(){
 	} else if(inputdiff.value == 9){
 		diffinfo.innerHTML = `Addition, subtraction, multiplication, division, and modulo problems using the values -100 to 100. Generates 5 to 8 single-decimal numbers.`;
 	}
-	//diffinfo.style.float = `right`;
 	opm.appendChild(diffinfo);
+
+	opm.appendChild(document.createElement(`br`));
+
+	let atttext = document.createElement(`div`);
+	atttext.innerHTML = `Max Attempts: ${Options.maxTries}`;
+	opm.appendChild(atttext);
+	let inputatt = document.createElement(`input`); // <input type="text" name="answer"></input>
+	inputatt.type = `range`;
+	inputatt.min = `1`;
+	inputatt.max = `10`;
+	inputatt.name = `maxattempts`;
+	inputatt.id = `maxattempts`;
+	inputatt.defaultValue = Options.maxTries;
+	inputatt.style.height = `5px`;
+	inputatt.style.width = `25%`;
+	inputatt.onmouseup = function(){
+		let inputatt = document.getElementById(`maxattempts`);
+		if(inputatt.value != Options.maxTries){
+			Options.maxTries = Number(inputatt.value); }
+			createOptionsMenu();
+		};
+	opm.appendChild(inputatt);
+}
+
+function toggleMenuSelector(){
+	let msops = $(`#ms_ops`)[0];
+	if(msops.className == `dropdown hide`){
+		msops.className = `dropdown show`;
+	} else {
+		msops.className = `dropdown hide`;
+	}
+}
+function toggleDropDown() {
+	let dd = document.getElementById("myDropdown");
+	let ms = document.getElementById("ms");
+    dd.classList.toggle("show");
+	if(ms.style.height != `calc(100% - 20px)`){
+		ms.style.height = `calc(100% - 20px)`;
+	} else {
+		ms.style.height = ``;
+	}
 }

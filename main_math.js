@@ -9,25 +9,25 @@ function generateMathProblem(difficulty){
 
 	if(difficulty == 1){
 		nums = getRandomInt(2,3);
-		symbols = [`+`,`-`];
+		symbols = [`+`,`+`,`+`,`-`,`-`];
 		min_num = 0;
 		max_num = 8;
 
 	} else if(difficulty == 2){
-		nums = getRandomInt(2,5);
+		nums = getRandomInt(3,3);//2,5
 		symbols = [`+`,`-`];
 		min_num = -6;
 		max_num = 12;
 
 	} else if(difficulty == 3){
-		nums = getRandomInt(2,5);
-		symbols = [`+`,`-`,`*`];
+		nums = getRandomInt(3,4);//2,5
+		symbols = [`+`,`+`,`+`,`-`,`-`,`-`,`*`];
 		min_num = -10;
 		max_num = 20;
 
 	} else if(difficulty == 4){
-		nums = getRandomInt(3,5);
-		symbols = [`+`,`-`,`*`];
+		nums = getRandomInt(4,4);
+		symbols = [`+`,`+`,`+`,`-`,`-`,`-`,`*`,`*`];
 		min_num = -12;
 		max_num = 24;
 
@@ -39,7 +39,7 @@ function generateMathProblem(difficulty){
 
 	} else if(difficulty == 6){
 		nums = getRandomInt(4,6);
-		symbols = [`+`,`-`,`*`,`/`];
+		symbols = [`+`,`+`,`+`,`-`,`-`,`-`,`*`,`*`,`*`,`/`,`/`];
 		min_num = -42;
 		max_num = 42;
 
@@ -51,7 +51,7 @@ function generateMathProblem(difficulty){
 
 	} else if(difficulty == 8){
 		nums = getRandomInt(5,7);
-		symbols = [`+`,`-`,`*`,`/`,`%`];
+		symbols = [`+`,`+`,`+`,`-`,`-`,`-`,`*`,`*`,`*`,`/`,`/`,`/`,`%`,`%`];
 		min_num = -86;
 		max_num = 86;
 
@@ -72,13 +72,11 @@ function generateMathProblem(difficulty){
 		if(difficulty > 3){
 			n = numberToDecimalNumber(getRandomFloat(min_num, max_num), dec);
 		}
-
 		if(n < 0){
 			n = `(${n})`;
 		} else {
 			n = `${n}`;
 		}
-
 		if(i < nums-1){
 			p.problem += `${n} ${getRandomFromArray(symbols)} `;
 		} else {
@@ -91,6 +89,7 @@ function generateMathProblem(difficulty){
 	p.complexity = getMathProblemComplexity(p);
 	p.tries = 1;
 	p.time = 0; //seconds
+	p.points = ((p.complexity/2.5)+0.5/p.difficulty)+1;
 
 	if(
 		(p.difficulty == 1 && p.complexity > 6) ||
@@ -120,37 +119,35 @@ function tryGenerateMathProblem(difficulty){
 		throw err;
 	}
 }
-function getStatBoxColor(value){
-	let color = `#363636`;
-
-	if(value < 1){
-		color = `#363636`;
-	} else if(value < 5){
-		color = `#363640`;
-	} else if(value < 10){
-		color = `#363656`;
-	} else if(value < 20){
-		color = `#404060`;
-	} else if(value < 30){
-		color = `#404076`;
-	} else if(value < 40){
-		color = `#404080`;
-	} else if(value < 50){
-		color = `#404096`;
-	} else if(value < 60){
-		color = `#5656a0`;
-	} else if(value < 70){
-		color = `#5656b6`;
-	} else if(value < 80){
-		color = `#5656c0`;
-	} else if(value < 90){
-		color = `#5656d6`;
-	} else if(value > 90){
-		color = `#6060f0`;
+function getLevelGrade(level){
+	if(level > 96){
+		return `A+`;
+	} else if(level > 92){
+		return `A`;
+	} else if(level > 89){
+		return `A-`;
+	} else if(level > 86){
+		return `B+`;
+	} else if(level > 82){
+		return `B`;
+	} else if(level > 79){
+		return `B-`;
+	} else if(level > 76){
+		return `C+`;
+	} else if(level > 72){
+		return `C`;
+	} else if(level > 69){
+		return `D+`;
+	} else if(level > 66){
+		return `D`;
+	} else if(level > 62){
+		return `D-`;
+	} else if(level > -1){
+		return `F`;
 	}
-
-	return color;
+	return `E`;
 }
+
 function simplifyMathProblem(problem){
 	let p = problem;
 	p.problem = p.problem
@@ -197,7 +194,7 @@ function isNearSolution(val){
 	if(Problem.difficulty < 3){
 		return val == Problem.answer;
 	}
-	return ( Math.max(val, Problem.answer) - Math.min(val, Problem.answer) < 0.01);
+	return ( val == Problem.answer || val == Math.floor(Problem.answer) );
 }
 function clamp(num, min, max) {
 	return num <= min ? min : num >= max ? max : num;

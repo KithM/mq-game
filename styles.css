@@ -64,21 +64,14 @@ button.disabled {
 }
 button.green {
 	border-color: #22aa46aa;
-	/*background: #26460daa;*/
-	/*background: #228646aa*/
-
-	color: #12aa36;
+	color: #22aa46;
 }
 button.blue {
 	border-color: #2646aaaa;
-	/* background: #0d2646aa; */
-
 	color: #2646aa;
 }
 button.red {
 	border-color: #aa2828aa;
-	/* background: #0d2646aa; */
-
 	color: #aa2828;
 }
 .morebutton {
@@ -130,8 +123,75 @@ statbox {
 	padding: 4px 4px 2px 4px;
 
 	font-size: 10px;
+}
+statbox.A\+,statbox.A,statbox.A\-,
+statbox.B\+,statbox.B,statbox.B\-,
+statbox.C\+,statbox.C,statbox.C\-,
+statbox.D\+,statbox.D,statbox.D\-,
+statbox.F,statbox.E
+{
+	font-style: italic;
+	font-weight: 500;
 
-	/* color: #fdfdfd; */
+	display: block;
+	margin-bottom: 5px;
+}
+statbox.A,statbox.B,statbox.C,
+statbox.D,statbox.F,statbox.E {
+	padding-right: 6px;
+}
+
+statbox.A\+ {
+	border-color: #009900aa;
+	color: #009900;
+}
+statbox.A {
+	border-color: #22AA46aa;
+	color: #22AA46;
+}
+statbox.A\- {
+	border-color: #2E9E43aa;
+	color: #2E9E43;
+}
+statbox.B\+ {
+	border-color: #3B9241aa;
+	color: #3B9241;
+}
+statbox.B {
+	border-color: #47873Eaa;
+	color: #47873E;
+}
+statbox.B\- {
+	border-color: #537B3Baa;
+	color: #537B3B;
+}
+statbox.C\+ {
+	border-color: #606F38aa;
+	color: #606F38;
+}
+statbox.C {
+	border-color: #6C6336aa;
+	color: #6C6336;
+}
+statbox.C\- {
+	border-color: #795733aa;
+	color: #795733;
+}
+statbox.D\+ {
+	border-color: #854B30aa;
+	color: #854B30;
+}
+statbox.D {
+	border-color: #91402Daa;
+	color: #91402D;
+}
+statbox.D\- {
+	border-color: #9E342Baa;
+	color: #9E342B;
+}
+statbox.F {
+	border-color: #aa2828aa;
+	color: #aa2828;
 }
 
 .addition,.subtraction,.multiplication,.division,.modulo {
@@ -193,6 +253,15 @@ statbox {
 	font-size: 12px;
 	color: #aaa;
 }
+.statdiv {
+	padding: 4px 4px 2px 4px;
+    border: 2px solid rgb(54, 54, 54);
+    border-radius: 4px;
+    font-size: 10px;
+    width: 60%;
+    left: 50%;
+    display: inline-block;
+}
 
 /* Animations */
 @keyframes fadeInOut {
@@ -222,7 +291,7 @@ statbox {
 /* Formatting */
 ns { user-select: none; }
 
-b { font-weight: 500;}
+b { font-weight: 500; color: inherit; }
 d { text-decoration: dotted underline; }
 d:hover { filter: brightness(1.25); }
 a { text-decoration: none; }
@@ -260,6 +329,41 @@ body {
 	box-shadow: 1px 1px 4px #ffffff26;
 }
 
+/* Dropdown */
+/* Dropdown Button */
+.dropbtn {
+}
+/* Dropdown button on hover & focus */
+.dropbtn:hover, .dropbtn:focus {
+}
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+	position: relative;
+	display: inline-block;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+	display: none;
+	position: absolute;
+	min-width: 100%;
+	z-index: 1;
+	margin-top: 12px;
+	margin-left: -8px;
+	font-size: 14px;
+}
+/* Links inside the dropdown */
+.dropdown-content a {
+	color: white;
+	padding: 4px 4px 2px 4px;
+	text-decoration: none;
+	display: block;
+
+	text-align: left;
+}
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover { filter: none; background-color: #222222; }
+
 /* General */
 .show { display: block; opacity: 1; }
 .hide { display: none; opacity: 0; }
@@ -272,28 +376,28 @@ body {
 ::-webkit-scrollbar-thumb:hover { background: #383838; } /*56*/
 
 input[type=range] {
-  -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
-  width: 100%; /* Specific width is required for Firefox. */
-  background: transparent; /* Otherwise white in Chrome */
+	-webkit-appearance: none; /* Hides the slider so that custom slider can be made */
+	width: 100%; /* Specific width is required for Firefox. */
+	background: transparent; /* Otherwise white in Chrome */
 }
 input[type=range]::-ms-track {
-  width: 100%;
-  cursor: pointer;
+	width: 100%;
+	cursor: pointer;
 
-  /* Hides the slider so custom styles can be added */
-  background: transparent;
-  border-color: transparent;
-  color: transparent;
+	/* Hides the slider so custom styles can be added */
+	background: transparent;
+	border-color: transparent;
+	color: transparent;
 }
 input[type=range]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  border: 2px solid #464646;
-  height: 15px;
-  width: 25px;
-  border-radius: 3px;
-  background: #363636;
-  cursor: pointer;
-  margin-top: -3px;
+	-webkit-appearance: none;
+	border: 2px solid #464646;
+	height: 15px;
+	width: 25px;
+	border-radius: 3px;
+	background: #363636;
+	cursor: pointer;
+	margin-top: -3px;
 }
 input[type=range]::-webkit-slider-thumb:hover {
 	border-color: #565656;
